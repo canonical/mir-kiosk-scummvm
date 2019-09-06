@@ -1,0 +1,75 @@
+name: mir-kiosk-scummvm
+adopt-info: scummvm
+summary: ScummVM packaged as a mir-kiosk snap
+description: ScummVM packaged as a mir-kiosk snap
+confinement: strict
+grade: stable
+base: core18
+license: GPL-2.0
+
+environment:
+  SHELL: bash
+  LC_ALL: C.UTF-8
+  LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib/:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pulseaudio
+  PATH: $SNAP/bin/:$SNAP/usr/bin/:${SNAP}/usr/games:${PATH}
+  # XDG config
+  XDG_CACHE_HOME:  $SNAP_USER_COMMON/.cache
+  XDG_CONFIG_DIRS: ${SNAP}/etc/xdg:$XDG_CONFIG_DIRS
+  XDG_CONFIG_HOME: $SNAP_USER_DATA/.config
+  # Prep EGL
+  __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
+  LIBGL_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
+  LIBVA_DRIVERS_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/dri
+  # Prep SDL
+  SDL_VIDEODRIVER: wayland
+
+layout:
+  /usr/share:
+    bind: $SNAP/usr/share
+
+plugs:
+  wayland:
+  opengl:
+  pulseaudio:
+
+apps:
+  daemon:
+    command: run-daemon scummvm -f
+    daemon: simple
+    restart-condition: on-failure
+    environment:
+      # Prep PulseAudio
+      PULSE_SYSTEM: 1
+      PULSE_RUNTIME_PATH: /var/run/pulse
+
+  mir-kiosk-scummvm:
+    command: wayland-launch scummvm -f
+    desktop: usr/share/applications/scummvm.desktop
+    environment:
+      # Prep PulseAudio
+      PULSE_SERVER: unix:$XDG_RUNTIME_DIR/../pulse/native
+
+parts:
+  glue:
+    plugin: dump
+    source: glue
+
+  scummvm:
+    plugin: nil
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version `LANG=C apt-cache policy scummvm | sed -rne 's/^\s+Candidate:\s+([^-]*)-.+$/\1/p'`
+    stage-packages:
+      - scummvm
+      - fluidsynth
+      - timidity
+      - beneath-a-steel-sky
+      - drascula
+      - flight-of-the-amazon-queen
+      - lure-of-the-temptress
+      - libpulse0
+
+  mesa:
+    plugin: nil
+    stage-packages:
+      - libgl1-mesa-dri

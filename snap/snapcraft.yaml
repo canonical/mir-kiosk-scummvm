@@ -26,15 +26,22 @@ environment:
 layout:
   /usr/share:
     bind: $SNAP/usr/share
+  /etc/glvnd:
+    bind: $SNAP/etc/glvnd
+  /etc/fonts:
+    bind: $SNAP/etc/fonts
+  /usr/games:
+    bind: $SNAP/usr/games
 
 plugs:
   wayland:
   opengl:
   pulseaudio:
+  alsa:
 
 apps:
   daemon:
-    command: run-daemon scummvm -f
+    command: run-daemon wayland-launch sh -c "(scummvm  -p /usr/share/scummvm/ --recursive --add; scummvm -f)"
     daemon: simple
     restart-condition: on-failure
     environment:
@@ -43,13 +50,17 @@ apps:
       PULSE_RUNTIME_PATH: /var/run/pulse
 
   mir-kiosk-scummvm:
-    command: wayland-launch scummvm -f
+    command: wayland-launch sh -c "(scummvm  -p /usr/share/scummvm/ --recursive --add; scummvm -f)"
     desktop: usr/share/applications/scummvm.desktop
     environment:
       # Prep PulseAudio
       PULSE_SERVER: unix:$XDG_RUNTIME_DIR/../pulse/native
 
 parts:
+  icons:
+    plugin: nil
+    stage-packages: [dmz-cursor-theme]
+
   glue:
     plugin: dump
     source: glue
@@ -67,9 +78,22 @@ parts:
       - drascula
       - flight-of-the-amazon-queen
       - lure-of-the-temptress
-      - libpulse0
+      - libsdl2-2.0-0
+      - libsdl2-image-2.0-0
+      - libsdl2-mixer-2.0-0
+      - libsdl2-net-2.0-0
 
   mesa:
     plugin: nil
     stage-packages:
       - libgl1-mesa-dri
+      - libwayland-egl1-mesa
+      - libglu1-mesa
+
+  misc:
+    plugin: nil
+    stage-packages:
+      - libwayland-client0
+      - libpulse0
+      - libsndfile1
+      - libasyncns0

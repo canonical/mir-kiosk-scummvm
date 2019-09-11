@@ -41,7 +41,7 @@ plugs:
 
 apps:
   daemon:
-    command: run-daemon wayland-launch sh -c "(scummvm  -p /usr/share/scummvm/ --recursive --add; scummvm -f)"
+    command: run-daemon wayland-launch scummvm-launch
     daemon: simple
     restart-condition: on-failure
     environment:
@@ -50,7 +50,7 @@ apps:
       PULSE_RUNTIME_PATH: /var/run/pulse
 
   mir-kiosk-scummvm:
-    command: wayland-launch sh -c "(scummvm  -p /usr/share/scummvm/ --recursive --add; scummvm -f)"
+    command: wayland-launch scummvm-launch
     desktop: usr/share/applications/scummvm.desktop
     environment:
       # Prep PulseAudio

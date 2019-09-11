@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+while [ ! -f "${XDG_CONFIG_HOME}/scummvm/scummvm.ini" ]
+do
+  mkdir -p ${XDG_CONFIG_HOME}
+  scummvm  -p /usr/share/scummvm/ --recursive --add
+  sleep 1
+done
+
+scummvm -f

@@ -83,6 +83,10 @@ parts:
       - libsdl2-mixer-2.0-0
       - libsdl2-net-2.0-0
 
+  drascula:
+    plugin: dump
+    source: http://archive.ubuntu.com/ubuntu/pool/universe/d/drascula/drascula_1.0+ds3-1_all.deb
+
   mesa:
     plugin: nil
     stage-packages:

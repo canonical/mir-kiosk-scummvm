@@ -75,7 +75,7 @@ parts:
       - fluidsynth
       - timidity
       - beneath-a-steel-sky
-      - drascula
+#      - drascula "WARNING: Incorrect version of the 'drascula.dat' engine data file found. Expected 5.0 but got 4.0.!"
       - flight-of-the-amazon-queen
       - lure-of-the-temptress
       - libsdl2-2.0-0

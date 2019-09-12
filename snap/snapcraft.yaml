@@ -65,6 +65,14 @@ parts:
     plugin: dump
     source: glue
 
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build: |
+      sed --in-place s'/%SNAP%/$SNAPCRAFT_PROJECT_NAME/' $SNAPCRAFT_PART_BUILD/bin/setup.sh
+      sed --in-place s'/%PLUGS%/opengl pulseaudio alsa wayland/' $SNAPCRAFT_PART_BUILD/bin/setup.sh
+      snapcraftctl build
+
   scummvm:
     plugin: nil
     override-pull: |

@@ -65,6 +65,11 @@ parts:
     plugin: dump
     source: glue
 
+  mir-kiosk-snap-launch:
+    plugin: dump
+    source: https://github.com/MirServer/mir-kiosk-snap-launch.git
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl pulseaudio alsa wayland
+
   scummvm:
     plugin: nil
     override-pull: |

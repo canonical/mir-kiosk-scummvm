@@ -26,8 +26,6 @@ environment:
 layout:
   /usr/share:
     bind: $SNAP/usr/share
-  /etc/glvnd:
-    bind: $SNAP/etc/glvnd
   /etc/fonts:
     bind: $SNAP/etc/fonts
   /usr/games:
@@ -83,14 +81,19 @@ parts:
 #      - drascula "WARNING: Incorrect version of the 'drascula.dat' engine data file found. Expected 5.0 but got 4.0.!"
       - flight-of-the-amazon-queen
       - lure-of-the-temptress
+
+  # drascula from 19.04
+  drascula:
+    plugin: dump
+    source: http://archive.ubuntu.com/ubuntu/pool/universe/d/drascula/drascula_1.0+ds3-1_all.deb
+
+  sdl2:
+    plugin: nil
+    stage-packages:
       - libsdl2-2.0-0
       - libsdl2-image-2.0-0
       - libsdl2-mixer-2.0-0
       - libsdl2-net-2.0-0
-
-  drascula:
-    plugin: dump
-    source: http://archive.ubuntu.com/ubuntu/pool/universe/d/drascula/drascula_1.0+ds3-1_all.deb
 
   mesa:
     plugin: nil
@@ -99,10 +102,7 @@ parts:
       - libwayland-egl1-mesa
       - libglu1-mesa
 
-  misc:
+  wayland:
     plugin: nil
     stage-packages:
       - libwayland-client0
-      - libpulse0
-      - libsndfile1
-      - libasyncns0

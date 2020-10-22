@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 while [ ! -f "${XDG_CONFIG_HOME}/scummvm/scummvm.ini" ]
 do

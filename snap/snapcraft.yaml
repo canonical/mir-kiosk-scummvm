@@ -4,8 +4,13 @@ summary: ScummVM packaged as a mir-kiosk snap
 description: ScummVM packaged as a mir-kiosk snap
 confinement: strict
 grade: stable
-base: core18
+base: core20
 license: GPL-2.0
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
 
 environment:
   SHELL: bash
@@ -40,7 +45,10 @@ plugs:
 
 apps:
   daemon:
-    command: run-daemon wayland-launch scummvm-launch
+    command-chain:
+      - bin/run-daemon
+      - bin/wayland-launch
+    command: bin/scummvm-launch
     daemon: simple
     restart-condition: always
     environment:
@@ -49,7 +57,9 @@ apps:
       PULSE_RUNTIME_PATH: /var/run/pulse
 
   mir-kiosk-scummvm:
-    command: wayland-launch scummvm-launch
+    command-chain:
+      - bin/wayland-launch
+    command: bin/scummvm-launch
     desktop: usr/share/applications/scummvm.desktop
     environment:
       # Prep PulseAudio
@@ -68,25 +78,26 @@ parts:
     plugin: dump
     source: https://github.com/MirServer/mir-kiosk-snap-launch.git
     override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl audio-playback pulseaudio alsa wayland
+    stage-packages:
+      - inotify-tools
 
   scummvm:
     plugin: nil
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version `LANG=C apt-cache policy scummvm | sed -rne 's/^\s+Candidate:\s+([^-]*)-.+$/\1/p'`
+    override-build: |
+      snapcraftctl build
+      sed -i s:Icon=scummvm:Icon=/usr/share/icons/hicolor/scalable/apps/scummvm.svg:g $SNAPCRAFT_PART_INSTALL/usr/share/applications/scummvm.desktop
+
     stage-packages:
       - scummvm
       - fluidsynth
       - timidity
       - beneath-a-steel-sky
-#      - drascula "WARNING: Incorrect version of the 'drascula.dat' engine data file found. Expected 5.0 but got 4.0.!"
+      - drascula
       - flight-of-the-amazon-queen
       - lure-of-the-temptress
-
-  # drascula from 19.04
-  drascula:
-    plugin: dump
-    source: http://archive.ubuntu.com/ubuntu/pool/universe/d/drascula/drascula_1.0+ds3-1_all.deb
 
   sdl2:
     plugin: nil

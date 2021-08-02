@@ -15,7 +15,7 @@ architectures:
 environment:
   SHELL: bash
   LC_ALL: C.UTF-8
-  LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib/:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/:${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pulseaudio
+  LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}/pulseaudio
   PATH: $SNAP/bin/:$SNAP/usr/bin/:${SNAP}/usr/games:${PATH}
   # XDG config
   XDG_CACHE_HOME:  $SNAP_USER_COMMON/.cache
@@ -40,8 +40,6 @@ plugs:
   wayland:
   opengl:
   audio-playback:
-  pulseaudio:
-  alsa:
 
 apps:
   daemon:
@@ -77,7 +75,7 @@ parts:
   mir-kiosk-snap-launch:
     plugin: dump
     source: https://github.com/MirServer/mir-kiosk-snap-launch.git
-    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl audio-playback pulseaudio alsa wayland
+    override-build:  $SNAPCRAFT_PART_BUILD/build-with-plugs.sh opengl wayland audio-playback
     stage-packages:
       - inotify-tools
 

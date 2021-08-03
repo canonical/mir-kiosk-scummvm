@@ -124,7 +124,7 @@ parts:
       - libwayland-egl1
 
   cleanup:
-    after: [scummvm, mir-kiosk-snap-launch, sdl2, wayland, glue, icons]
+    after: [scummvm, mir-kiosk-snap-launch, sdl2, wayland, glue, icons, mesa]
     plugin: nil
     build-snaps: [ mesa-core20 ]
     override-prime: |

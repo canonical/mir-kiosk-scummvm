@@ -63,6 +63,7 @@ apps:
       - bin/run-daemon
       - bin/wayland-launch
     command: bin/scummvm-launch
+    desktop: usr/share/applications/scummvm.desktop
     daemon: simple
     restart-condition: always
     environment:
